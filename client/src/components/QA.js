@@ -15,7 +15,7 @@ const QA = () => {
         aria-controls="panel1a-content"
         id="panel1a-header"
       >
-        <Typography>Question</Typography>
+        <Typography style={{ fontSize: 17 }}>Question</Typography>
       </AccordionSummary>
       <AccordionDetails>
         <Typography>
