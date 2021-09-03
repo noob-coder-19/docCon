@@ -53,10 +53,10 @@ const Footer = () => {
             <Listings
               links={[
                 "MORE TO EXPLORE",
-                "Beauty Magazine",
+                "Health Magazine",
                 "Tools and Consultations",
                 "Offers",
-                "#LorealParis",
+                "#BuildAModernDataApp",
               ]}
             ></Listings>
           </Grid>
