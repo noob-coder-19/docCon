@@ -3,6 +3,7 @@ import DoctorCards from "../components/DoctorCards";
 import FAQ from "../components/FAQ";
 import BreadCrumsTab from "../components/shared/BreadCrumsTab";
 import Footer from "../components/shared/Footer";
+import Nav from "../components/shared/Nav";
 
 const Speciality = () => {
   const { speciality } = useParams();
@@ -17,6 +18,7 @@ const Speciality = () => {
   };
   return (
     <div>
+      <Nav />
       <BreadCrumsTab
         links={["Home", "Specialties", titles[speciality]]}
       ></BreadCrumsTab>
