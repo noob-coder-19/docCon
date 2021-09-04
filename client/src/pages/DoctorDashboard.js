@@ -18,8 +18,10 @@ const DoctorDashboard = (props) => {
   } = process.env;
   console.log(department, email);
 
-  const doctor = "doctors_by_email";
-  const url = `https://${databaseId}-${region}.apps.astra.datastax.com/api/rest/v2/keyspaces/${keyspaceId}/${doctor}`;
+  const doctor1 = "doctors_by_email";
+  const doctor2 = "doctors_by_department";
+  const url = `https://${databaseId}-${region}.apps.astra.datastax.com/api/rest/v2/keyspaces/${keyspaceId}/${doctor1}`;
+  const url_ = `https://${databaseId}-${region}.apps.astra.datastax.com/api/rest/v2/keyspaces/${keyspaceId}/${doctor2}/${department}/true/${email}`;
 
   const fetchDoctor = async () => {
     await axios({
@@ -39,6 +41,16 @@ const DoctorDashboard = (props) => {
     });
   };
 
+  const updateOnlineStatus = async () => {
+    await axios({
+      method: "PATCH",
+      url: url_,
+      headers: {
+        "X-Cassandra-Token": appToken,
+      },
+    });
+  };
+
   useEffect(() => {
     fetchDoctor();
   }, []);
@@ -47,7 +59,9 @@ const DoctorDashboard = (props) => {
     <div>
       <BreadCrumsTab links={["Home", "Doctor Dashboard"]} />
       <Typography variant="h2">Hello {doctorName}</Typography>
-      <Button>Take patients</Button>
+      <Button onClick={updateOnlineStatus} variant="contained">
+        Take patients
+      </Button>
       <Footer></Footer>
     </div>
   );
