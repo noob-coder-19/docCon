@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Home from "./pages/Home";
 import UserLogin from "./pages/UserLogin";
 import UserRegister from "./pages/UserRegister";
+import Speciality from "./pages/Speciality";
 
 function App() {
   return (
@@ -9,6 +10,7 @@ function App() {
       <Router>
         <Switch>
           <Route exact path="/" component={Home}></Route>
+          <Route exact path="/:speciality" component={Speciality}></Route>
           <Route exact path="/user/register" component={UserRegister}></Route>
           <Route exact path="/user/login" component={UserLogin}></Route>
         </Switch>
