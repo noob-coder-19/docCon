@@ -7,7 +7,10 @@ import {
   useMediaQuery,
   useTheme,
 } from "@material-ui/core";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import app from "../auth/userAuth";
+import { createUserWithEmailAndPassword, getAuth } from "@firebase/auth";
+import { useState } from "react";
 
 const colSyles = {
   display: "flex",
@@ -23,8 +26,20 @@ const rowSyles = {
 };
 
 const UserRegister = () => {
+  const history = useHistory();
   const theme = useTheme();
   const isMd = useMediaQuery(theme.breakpoints.up("md"));
+  const auth = getAuth(app);
+  const [fName, setFName] = useState("");
+  const [lName, setLName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleRegister = () => {
+    createUserWithEmailAndPassword(email, password).then((user) => {
+      history.push("/");
+    });
+  };
 
   return (
     <div
@@ -57,28 +72,44 @@ const UserRegister = () => {
             type="text"
             variant="outlined"
             fullWidth
+            value={fName}
+            onChange={(e) => {
+              setFName(e.target.value);
+            }}
           ></TextField>
           <TextField
             label="Last Name"
             type="text"
             variant="outlined"
             fullWidth
+            value={lName}
+            onChange={(e) => {
+              setLName(e.target.value);
+            }}
           ></TextField>
           <TextField
             label="Email"
             type="email"
             variant="outlined"
             fullWidth
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
           ></TextField>
           <TextField
             label="Pasword"
-            type="email"
+            type="password"
             variant="outlined"
             fullWidth
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
           ></TextField>
-          {/* <Typography variant="body1" align="right" style={{ width: "100%" }}>
+          <Typography variant="body1" align="right" style={{ width: "100%" }}>
             <Button style={{ fontSize: 9 }}>Forgot Password?</Button>
-          </Typography> */}
+          </Typography>
           <Button variant="contained" type="Submit" color="primary">
             Register
           </Button>

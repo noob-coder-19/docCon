@@ -7,7 +7,10 @@ import {
   useMediaQuery,
   useTheme,
 } from "@material-ui/core";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import app from "../auth/userAuth";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { useState } from "react";
 
 const colSyles = {
   display: "flex",
@@ -24,7 +27,16 @@ const rowSyles = {
 
 const UserLogin = () => {
   const theme = useTheme();
+  const history = useHistory();
   const isMd = useMediaQuery(theme.breakpoints.up("md"));
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const auth = getAuth(app);
+  const handleSignIn = () => {
+    signInWithEmailAndPassword(email, password).then((user) => {
+      history.push("/");
+    });
+  };
 
   return (
     <div
@@ -56,12 +68,20 @@ const UserLogin = () => {
             label="Email"
             type="email"
             variant="outlined"
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
             fullWidth
           ></TextField>
           <TextField
             label="Pasword"
             type="email"
             variant="outlined"
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
             fullWidth
           ></TextField>
           <Typography variant="body1" align="right" style={{ width: "100%" }}>
