@@ -9,6 +9,7 @@ dotenv.config();
 
 const DoctorDashboard = (props) => {
   const [doctorName, setDoctorName] = useState("");
+  const [isDoctorOnline, setIsDoctorOnline] = useState(false);
   const { department, email } = props.location.state;
   const {
     REACT_APP_ASTRA_DB_ID: databaseId,
@@ -21,7 +22,7 @@ const DoctorDashboard = (props) => {
   const doctor1 = "doctors_by_email";
   const doctor2 = "doctors_by_department";
   const url = `https://${databaseId}-${region}.apps.astra.datastax.com/api/rest/v2/keyspaces/${keyspaceId}/${doctor1}`;
-  const url_ = `https://${databaseId}-${region}.apps.astra.datastax.com/api/rest/v2/keyspaces/${keyspaceId}/${doctor2}/${department}/true/${email}`;
+  const url_ = `https://${databaseId}-${region}.apps.astra.datastax.com/api/rest/v2/keyspaces/${keyspaceId}/${doctor2}/${department}/${!isDoctorOnline}/${email}`;
 
   const fetchDoctor = async () => {
     await axios({
@@ -38,6 +39,7 @@ const DoctorDashboard = (props) => {
       },
     }).then((response) => {
       setDoctorName(response.data.data.name);
+      setIsDoctorOnline(response.data.data.isOnline);
     });
   };
 
