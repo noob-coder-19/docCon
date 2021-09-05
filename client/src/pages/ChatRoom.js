@@ -3,10 +3,17 @@ import { Box, Button, Container, TextField } from "@material-ui/core";
 import useChat from "../hooks/useChat";
 import { useParams } from "react-router";
 import "./ChatRoom.css";
+import doctorApp from "../auth/doctorAuth";
+import app from "../auth/UserAuth";
+import { getAuth } from "firebase/auth";
 
 const ChatRoom = () => {
   const { roomId } = useParams();
-  const { messages, sendMessage } = useChat(roomId);
+  const { messages, sendMessage } = useChat({
+    roomId,
+    doctor_email: getAuth(doctorApp).currentUser.email,
+    user_email: getAuth(app).currentUser.email,
+  });
   const [newMessage, setNewMessage] = React.useState("");
 
   const handleNewMessageChange = (event) => {

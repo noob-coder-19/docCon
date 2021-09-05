@@ -1,10 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import socketIOClient from "socket.io-client";
+import emailjs from "emailjs-com";
+import dotenv from "dotenv";
+import { v4 } from "uuid";
+
+dotenv.config();
 
 const NEW_CHAT_MESSAGE_EVENT = "newChatMessage";
 const SOCKET_SERVER_URL = "http://localhost:4000";
 
-const useChat = (roomId) => {
+const useChat = ({ roomId, doctor_email, user_email }) => {
   const [messages, setMessages] = useState([]);
   const socketRef = useRef();
 
@@ -19,6 +24,22 @@ const useChat = (roomId) => {
         ownedByCurrentUser: message.senderId === socketRef.current.id,
       };
       setMessages((messages) => [...messages, incomingMessage]);
+    });
+
+    socketRef.current.on("disconnect", () => {
+      const id = v4();
+      emailjs.sendForm(
+        process.env.REACT_APP_SERVICE_ID,
+        process.env.REACT_APP_TEMPLATE_ID,
+        { id, email: doctor_email },
+        process.env.REACT_APP_USER_ID
+      );
+      emailjs.sendForm(
+        process.env.REACT_APP_SERVICE_ID,
+        process.env.REACT_APP_TEMPLATE_ID,
+        { id, email: user_email },
+        process.env.REACT_APP_USER_ID
+      );
     });
 
     return () => {

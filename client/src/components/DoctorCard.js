@@ -7,7 +7,12 @@ import {
   Modal,
 } from "@material-ui/core";
 import React, { useState } from "react";
+import emailjs from "emailjs-com";
 import ReactDOM from "react-dom";
+import axios from "axios";
+import app from "../auth/userAuth";
+import { getAuth } from "firebase/auth";
+import { v1 } from "uuid";
 
 const modalStyle = {
   position: "absolute",
@@ -22,6 +27,8 @@ const modalStyle = {
 };
 
 const DoctorCard = (props) => {
+  const auth = getAuth();
+
   // eslint-disable-next-line no-undef
   const PayPalButton = paypal.Buttons.driver("react", { React, ReactDOM });
   const {
@@ -39,6 +46,28 @@ const DoctorCard = (props) => {
       ? "https://i.ibb.co/YQ4HvQP/male.jpg"
       : "https://i.ibb.co/ckP4Pn2/female.jpg";
   const [open, setOpen] = useState(false);
+  const {
+    REACT_APP_ASTRA_DB_ID: databaseId,
+    REACT_APP_ASTRA_DB_REGION: region,
+    REACT_APP_ASTRA_DB_KEYSPACE: keyspaceId,
+    REACT_APP_ASTRA_DB_APPLICATION_TOKEN: appToken,
+  } = process.env;
+  const add_url = `https://${databaseId}-${region}.apps.astra.datastax.com/api/rest/v2/keyspaces/${keyspaceId}/queue_by_doctor`;
+
+  const enqueue = () => {
+    axios({
+      method: "POST",
+      url: add_url,
+      headers: {
+        "X-Cassandra-Token": appToken,
+      },
+      data: {
+        doctor: email,
+        user: auth.getUser.email,
+        time: v1(),
+      },
+    });
+  };
 
   const createOrder = (data, actions) => {
     return actions.order.create({
@@ -53,6 +82,7 @@ const DoctorCard = (props) => {
   };
 
   const onApprove = (data, actions) => {
+    enqueue();
     return actions.order.capture();
   };
 
@@ -81,6 +111,7 @@ const DoctorCard = (props) => {
         <Typography style={{ fontSize: 11 }}>{qualifications}</Typography>
         <Typography style={{ fontSize: 14 }}>{"Fees: $" + fees}</Typography>
         <Button
+          disabled={isOnline}
           variant="contained"
           color="primary"
           style={{ fontSize: 12, marginBottom: 10, marginTop: 3 }}

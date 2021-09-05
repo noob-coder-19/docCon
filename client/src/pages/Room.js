@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Button, Container, TextField } from "@material-ui/core";
 
-const Room = () => {
+const Room = (props) => {
   const [roomName, setRoomName] = React.useState("");
 
   const handleRoomNameChange = (event) => {
